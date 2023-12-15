@@ -74,7 +74,12 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 mongoose
   .connect(DATABASE_URL)
   .then(() => {
-    httpServer.listen(port, () => {
+    if (NODE_ENV === 'development') {
+      return httpServer.listen(port, () => {
+        console.log(`Server running on http://localhost:${port}`);
+      });
+    }
+    app.listen(port, () => {
       console.log(`Server running on http://localhost:${port}`);
     });
   })
