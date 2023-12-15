@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { commentSchema, commentType } from '../../schema/comment-schema.js';
-import comments from '../../models/comments.js';
 import { NotFoundError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
+import { CommentServices } from '../../services/comment-services.js';
+import { comments } from '../../models/comments.js';
 
 const updateComment = async (
   req: Request,
@@ -13,7 +14,7 @@ const updateComment = async (
     const commentId = req.params.commentId;
 
     // validation comment
-    const isComment = await comments.findOne({ _id: commentId });
+    const isComment = await CommentServices.findCommentById(commentId);
     if (!isComment)
       throw new NotFoundError(
         'The specified comment does not exist for update'
@@ -23,15 +24,7 @@ const updateComment = async (
     const commentTextSchema = commentSchema.pick({ text: true });
     commentTextSchema.parse({ text });
 
-    await comments.updateOne(
-      { _id: commentId },
-      {
-        $set: {
-          text,
-          updatedAt: Date.now(),
-        },
-      }
-    );
+    await CommentServices.updateContentComment(commentId, text);
 
     const response: ApiResponse = {
       status: 200,

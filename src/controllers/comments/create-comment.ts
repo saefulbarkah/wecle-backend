@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { commentType } from '../../schema/comment-schema.js';
-import comments from '../../models/comments.js';
 import Article from '../../models/article.js';
 import User from '../../models/user.js';
 import { ValidationError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
+import { CommentServices } from '../../services/comment-services.js';
 
 const createComment = async (
   req: Request,
@@ -26,12 +26,11 @@ const createComment = async (
       );
 
     // process to create comment
-    const comment = await comments.create({
-      article: articleId,
+    const comment = await CommentServices.createNewComment(
+      articleId,
       text,
-      user: userId,
-    });
-
+      userId
+    );
     // update comment id
     await Article.updateOne(
       { _id: articleId },

@@ -1,5 +1,25 @@
 import mongoose, { InferSchemaType, Schema } from 'mongoose';
 
+const replySchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const commentSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -15,6 +35,7 @@ const commentSchema = new Schema({
     ref: 'Article',
     required: true,
   },
+  replies: [replySchema],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -25,8 +46,13 @@ const commentSchema = new Schema({
   },
 });
 
-type schemaType = InferSchemaType<typeof commentSchema>;
+type ReplyType = InferSchemaType<typeof replySchema> & {
+  _id: string;
+};
+type commentType = InferSchemaType<typeof commentSchema> & {
+  _id: string;
+};
 
-const comments = mongoose.model<schemaType>('Comment', commentSchema);
+const comments = mongoose.model<commentType>('Comment', commentSchema);
 
-export default comments;
+export { comments, ReplyType, commentType };

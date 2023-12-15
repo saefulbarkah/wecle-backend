@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import comments from '../../models/comments.js';
 import { NotFoundError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
+import { CommentServices } from '../../services/comment-services.js';
 
 const deleteComment = async (
   req: Request,
@@ -10,7 +10,7 @@ const deleteComment = async (
 ) => {
   try {
     const id = req.params.commentId;
-    const result = await comments.deleteOne({ _id: id });
+    const result = await CommentServices.deleteCommentById(id);
 
     // check if has deleted
     if (result.deletedCount === 0)

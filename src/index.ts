@@ -5,7 +5,6 @@ import * as route from './routes/index.js';
 import User from './models/user.js';
 import protectedRequest from './middleware/protect-api.js';
 import Article from './models/article.js';
-import comments from './models/comments.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import errorHandling from './lib/error-handling.js';
@@ -27,33 +26,6 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.get('/', (req, res) => {
   res.cookie('testing', 'edanken');
   res.json('express + typescript');
-});
-
-// clear collection
-app.get('/clear', async (req, res) => {
-  let schemaData;
-  const schema = req.query.schema as string;
-  switch (schema) {
-    case 'user':
-      await User.deleteMany();
-      schemaData = 'user';
-      break;
-    case 'author':
-      await Author.deleteMany();
-      schemaData = 'author';
-      break;
-    case 'article':
-      await Article.deleteMany();
-      schemaData = 'article';
-      break;
-    case 'comment':
-      await comments.deleteMany();
-      schemaData = 'comment';
-      break;
-    default:
-      break;
-  }
-  res.send(`cleared ${schemaData}`);
 });
 
 // route lists
