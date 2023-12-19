@@ -16,7 +16,7 @@ const app = express();
 const port = 4000;
 const httpServer = createServer(app);
 // initialize socket io
-createSocketIo(httpServer);
+// createSocketIo(httpServer);
 
 app.use(cors({ credentials: true, origin: process.env.ORIGIN_CORS }));
 app.use(cookieParser());
@@ -46,11 +46,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 mongoose
   .connect(DATABASE_URL)
   .then(() => {
-    if (NODE_ENV === 'development') {
-      return httpServer.listen(port, () => {
-        console.log(`Server running on http://localhost:${port}`);
-      });
-    }
+    // if (NODE_ENV === 'development') {
+    //   return httpServer.listen(port, () => {
+    //     console.log(`Server running on http://localhost:${port}`);
+    //   });
+    // }
     app.listen(port, () => {
       console.log(`Server running on http://localhost:${port}`);
     });

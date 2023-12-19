@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { commentType, comments } from '../models/comments.js';
+import { NotFoundError } from '../errors/index.js';
 
 export class CommentServices {
   static async createNewComment(
@@ -14,7 +15,7 @@ export class CommentServices {
     });
   }
   static async findCommentById(id: string) {
-    return await comments.findOne({ _id: id });
+    return await comments.findOne({ _id: id }).populate('article');
   }
   static async deleteCommentById(id: string) {
     return await comments.deleteOne({ _id: id });
@@ -68,6 +69,7 @@ export class CommentServices {
               avatar: { $arrayElemAt: ['$authorDetails.avatar', 0] },
               // Add other fields from 'authorDetails' if needed
             },
+            likes: 1,
             text: 1,
             createdAt: 1,
             updatedAt: 1,
@@ -78,5 +80,41 @@ export class CommentServices {
       ])
       .sort({ updatedAt: -1 });
     return comment;
+  }
+  static async dislikeComment(id: string, userId: string) {
+    const dislikeComment = await comments.findOneAndUpdate(
+      { _id: id },
+      {
+        $pull: {
+          likes: { _id: userId },
+        },
+      }
+    );
+
+    const message = 'Dislike comment success';
+    return { response: dislikeComment, message };
+  }
+  static async likeComment(id: string, userId: string) {
+    const isLiked = await comments.findOne({ 'likes._id': userId, _id: id });
+    const isComment = await this.findCommentById(id);
+
+    // validation
+    if (!isComment) throw new NotFoundError('Comment not found');
+    if (isLiked) {
+      return await this.dislikeComment(id, userId);
+    }
+
+    const commentLike = await comments.updateOne(
+      { _id: id },
+      {
+        $push: {
+          likes: { _id: userId },
+        },
+      }
+    );
+
+    const message = 'Like comment success';
+
+    return { response: commentLike, message };
   }
 }

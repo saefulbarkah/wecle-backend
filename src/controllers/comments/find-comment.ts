@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Article from '../../models/article.js';
-import { NotFoundError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
-import mongoose from 'mongoose';
 import { CommentServices } from '../../services/comment-services.js';
 
 type Treq = {

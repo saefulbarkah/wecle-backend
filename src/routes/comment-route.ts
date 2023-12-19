@@ -8,5 +8,7 @@ route.post('/', protectedRequest, commentController.create);
 route.delete('/delete/:commentId', protectedRequest, commentController.delete);
 route.patch('/update/:commentId', protectedRequest, commentController.update);
 route.get('/article/:articleId', commentController.find);
+route.post('/like', protectedRequest, commentController.like);
+route.post('/dislike', protectedRequest, commentController.dislike);
 
 export default route;

@@ -3,12 +3,10 @@ import { Server as SocketIoServer } from 'socket.io';
 import { notificationType } from '../models/notification.js';
 import { NotificationHandler } from './handlers/notification-handler.js';
 import { UserHandler } from './handlers/user-handler.js';
-import { NODE_ENV } from '../config/config.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
 export function createSocketIo(server: Server) {
-  if (NODE_ENV === 'production') return;
   const io = new SocketIoServer(server, {
     cors: {
       origin: '*',

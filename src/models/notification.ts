@@ -43,7 +43,12 @@ const Notification = model<notificationType>(
 
 export class NotificationService {
   // create notification
-  static async create(data: notificationType): Promise<notificationType> {
+  static async create(
+    data: Pick<
+      notificationType,
+      'sender' | 'receiver' | 'message' | 'targetUrl'
+    >
+  ): Promise<notificationType> {
     const created = await Notification.create({
       sender: data.sender,
       receiver: data.receiver,

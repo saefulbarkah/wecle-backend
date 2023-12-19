@@ -14,6 +14,14 @@ const replySchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  likes: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    },
+  ],
   updatedAt: {
     type: Date,
     default: Date.now,
@@ -40,6 +48,14 @@ const commentSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  likes: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    },
+  ],
   updatedAt: {
     type: Date,
     default: Date.now,
