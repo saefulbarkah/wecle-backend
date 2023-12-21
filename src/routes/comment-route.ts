@@ -10,5 +10,6 @@ route.patch('/update/:commentId', protectedRequest, commentController.update);
 route.get('/article/:articleId', commentController.find);
 route.post('/like', protectedRequest, commentController.like);
 route.post('/dislike', protectedRequest, commentController.dislike);
+route.post('/reply', protectedRequest, commentController.reply);
 
 export default route;

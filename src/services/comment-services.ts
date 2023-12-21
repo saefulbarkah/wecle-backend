@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { commentType, comments } from '../models/comments.js';
+import { ReplyType, commentType, comments } from '../models/comments.js';
 import { NotFoundError } from '../errors/index.js';
 
 export class CommentServices {
@@ -116,5 +116,19 @@ export class CommentServices {
     const message = 'Like comment success';
 
     return { response: commentLike, message };
+  }
+
+  // Reply comment
+  static async reply(id: string, text: string, userId: string) {
+    const comment = await comments.findById(id);
+    if (!comment) throw new NotFoundError('Comment not found');
+    const reply = {
+      text: text,
+      user: userId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    comment.replies.push(reply);
+    await comment.save();
   }
 }

@@ -43,10 +43,7 @@ const commentSchema = new Schema({
     ref: 'Article',
     required: true,
   },
-  replies: {
-    type: Schema.Types.ObjectId,
-    ref: 'Reply',
-  },
+  replies: [replySchema],
   createdAt: {
     type: Date,
     default: Date.now,

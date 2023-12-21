@@ -3,6 +3,7 @@ import deleteComment from './delete-comment.js';
 import dislikeComment from './dislike.comment.js';
 import findComment from './find-comment.js';
 import likeComment from './like-comment.js';
+import replyComment from './reply-comment.js';
 import updateComment from './update-comment.js';
 
 const commentController = {
@@ -12,6 +13,7 @@ const commentController = {
   find: findComment,
   like: likeComment,
   dislike: dislikeComment,
+  reply: replyComment,
 };
 
 export default commentController;
