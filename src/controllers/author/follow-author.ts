@@ -15,7 +15,7 @@ const followAuthor = async (
   const { targetAuthor, author } = req.body as requestType;
 
   try {
-    await AuthorService.follow(targetAuthor, author);
+    await AuthorService.follow(author, targetAuthor);
     const response: ApiResponse = {
       status: 201,
       message: 'Success following',

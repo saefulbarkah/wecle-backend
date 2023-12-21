@@ -18,6 +18,10 @@ const notificationSchema = new Schema({
   targetUrl: {
     type: String,
   },
+  type: {
+    type: String,
+    enum: ['comment', 'follow', 'unfollow'],
+  },
   readAt: {
     type: Date,
   },
@@ -46,7 +50,7 @@ export class NotificationService {
   static async create(
     data: Pick<
       notificationType,
-      'sender' | 'receiver' | 'message' | 'targetUrl'
+      'sender' | 'receiver' | 'message' | 'targetUrl' | 'type'
     >
   ): Promise<notificationType> {
     const created = await Notification.create({
@@ -54,6 +58,7 @@ export class NotificationService {
       receiver: data.receiver,
       message: data.message,
       targetUrl: data.targetUrl,
+      type: data.type,
     });
     return created;
   }

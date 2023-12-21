@@ -1,6 +1,7 @@
 import mongoose, { ObjectId } from 'mongoose';
 import { NotFoundError, ValidationError } from '../errors/index.js';
 import { Author, followSchema } from '../models/author.js';
+import { NotificationService } from '../models/notification.js';
 
 export class AuthorService {
   // follow author
@@ -14,8 +15,10 @@ export class AuthorService {
 
     // check if has followed before
     const hasFollowed = await Author.findOne({
-      'followings.author': authorId,
+      _id: authorId,
+      'followings.author': targetAuthor,
     });
+
     if (hasFollowed)
       throw new ValidationError('You have followed this author before');
 
@@ -25,7 +28,7 @@ export class AuthorService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    findAuthor.followers.push(newFollower);
+    findAuthor.followings.push(newFollower);
     findAuthor.save();
 
     // push following data
@@ -34,8 +37,17 @@ export class AuthorService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    findTargetAuthor.followings.push(newFollowing);
+    findTargetAuthor.followers.push(newFollowing);
     findTargetAuthor.save();
+
+    // push notifications
+    NotificationService.create({
+      receiver: new mongoose.Types.ObjectId(targetAuthor),
+      sender: new mongoose.Types.ObjectId(authorId),
+      message: 'Started following you.',
+      targetUrl: authorId,
+      type: 'follow',
+    });
   }
 
   // unfollow author
