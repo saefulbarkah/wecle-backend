@@ -2,13 +2,10 @@ import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { DATABASE_URL, NODE_ENV } from './config/config.js';
 import * as route from './routes/index.js';
-import User from './models/user.js';
 import protectedRequest from './middleware/protect-api.js';
-import Article from './models/article.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import errorHandling from './lib/error-handling.js';
-import { Author } from './models/author.js';
 import { createServer } from 'http';
 import { createSocketIo } from './sockets/socket.js';
 
@@ -24,7 +21,6 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.get('/', (req, res) => {
-  res.cookie('testing', 'edanken');
   res.json('express + typescript');
 });
 

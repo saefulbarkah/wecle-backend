@@ -6,5 +6,6 @@ const router = express.Router();
 // route lists
 router.get('/', authorController.lists);
 router.patch('/update', authorController.updateAuthor);
+router.post('/follow', authorController.follow);
 
 export default router;
