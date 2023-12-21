@@ -43,7 +43,10 @@ const commentSchema = new Schema({
     ref: 'Article',
     required: true,
   },
-  replies: [replySchema],
+  replies: {
+    type: Schema.Types.ObjectId,
+    ref: 'Reply',
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -65,6 +68,7 @@ const commentSchema = new Schema({
 type ReplyType = InferSchemaType<typeof replySchema> & {
   _id: string;
 };
+
 type commentType = InferSchemaType<typeof commentSchema> & {
   _id: string;
 };
