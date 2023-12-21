@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { ReplyType, commentType, comments } from '../models/comments.js';
 import { NotFoundError } from '../errors/index.js';
+import { NotificationService } from '../models/notification.js';
 
 export class CommentServices {
   static async createNewComment(
@@ -130,5 +131,20 @@ export class CommentServices {
     };
     comment.replies.push(reply);
     await comment.save();
+
+    const findReplier = comment.replies.find((item) =>
+      item.user.equals(userId)
+    );
+
+    // push notification when reply comment
+    if (!findReplier?.user.equals(comment.user)) {
+      NotificationService.create({
+        sender: new mongoose.Types.ObjectId(userId),
+        receiver: comment.user,
+        message: 'Reply your comment.',
+        type: 'comment',
+        targetUrl: comment.article.toString(),
+      });
+    }
   }
 }
