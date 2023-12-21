@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import { NotFoundError, ValidationError } from '../errors/index.js';
 import { Author, followSchema } from '../models/author.js';
 
@@ -14,14 +14,14 @@ export class AuthorService {
 
     // check if has followed before
     const hasFollowed = await Author.findOne({
-      'followings.user': targetAuthor,
+      'followings.author': targetAuthor,
     });
     if (hasFollowed)
       throw new ValidationError('You have followed this author before');
 
     // push new follower
-    const newFollower: Partial<followSchema> = {
-      user: new mongoose.Types.ObjectId(targetAuthor),
+    const newFollower: followSchema = {
+      author: new mongoose.Types.ObjectId(targetAuthor),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -30,7 +30,7 @@ export class AuthorService {
 
     // push following data
     const newFollowing: Partial<followSchema> = {
-      user: new mongoose.Types.ObjectId(targetAuthor),
+      author: new mongoose.Types.ObjectId(targetAuthor),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -1,9 +1,9 @@
 import mongoose, { Schema, InferSchemaType } from 'mongoose';
 
 const followSchema = new Schema({
-  user: {
+  author: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Author',
   },
   createdAt: {
     type: Date,
