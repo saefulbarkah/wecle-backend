@@ -14,3 +14,4 @@ This is under development services, i hope in 2024 will releases, i know develop
 - [ ] Recommendations algorithm
 - [ ] For you algorithm (based on topic following)
 - [ ] SEO article
+- [ ] CRUD topics
