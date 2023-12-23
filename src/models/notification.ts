@@ -20,7 +20,7 @@ const notificationSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ['comment', 'follow', 'unfollow'],
+    enum: ['comment', 'follow'],
   },
   readAt: {
     type: Date,

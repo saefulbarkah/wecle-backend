@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
-import { ReplyType, commentType, comments } from '../models/comments.js';
+import { commentType, comments } from '../models/comments.js';
 import { NotFoundError } from '../errors/index.js';
 import { NotificationService } from '../models/notification.js';
+import { ArticleServices } from './article-services.js';
 
 export class CommentServices {
   static async createNewComment(
@@ -9,6 +10,18 @@ export class CommentServices {
     text: string,
     userId: string
   ) {
+    const findArticle = await ArticleServices.findArticleById(articleId);
+    const receiverUser = findArticle?.author.user?._id;
+    if (!receiverUser?.equals(userId)) {
+      NotificationService.create({
+        message: 'Commented on your post',
+        sender: new mongoose.Types.ObjectId(userId),
+        receiver: new mongoose.Types.ObjectId(receiverUser),
+        targetUrl: findArticle?.slug,
+        type: 'comment',
+      });
+    }
+
     return await comments.create({
       article: articleId,
       text,

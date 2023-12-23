@@ -32,7 +32,7 @@ const articleSchema = new Schema({
   },
 });
 
-type ArticleType = InferSchemaType<typeof articleSchema>;
+export type ArticleType = InferSchemaType<typeof articleSchema>;
 
 const Article = mongoose.model<ArticleType>('Article', articleSchema);
 
