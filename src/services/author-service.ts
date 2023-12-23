@@ -77,4 +77,9 @@ export class AuthorService {
 
     return findAuthor;
   }
+
+  // find author by id
+  static async findByid(id: string) {
+    return await Author.findOne({ _id: id });
+  }
 }

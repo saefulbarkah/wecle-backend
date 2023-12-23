@@ -8,5 +8,6 @@ router.get('/', authorController.lists);
 router.patch('/update', authorController.updateAuthor);
 router.post('/follow', authorController.follow);
 router.post('/unfollow', authorController.unfollow);
+router.get('/:authorId', authorController.find);
 
 export default router;
