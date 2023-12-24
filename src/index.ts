@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 
 // route lists
 app.use('/auth', route.auth);
-app.use('/authors', protectedRequest, route.author);
+app.use('/authors', route.author);
 app.use('/article', route.article);
 app.use('/comments', route.comment);
 app.use('/notifications', route.notification);
