@@ -80,6 +80,14 @@ export class AuthorService {
 
   // find author by id
   static async findByid(id: string) {
-    return await Author.findOne({ _id: id });
+    return await Author.findOne({ _id: id })
+      .populate({
+        path: 'followers.author',
+        select: '_id name avatar createdAt updatedAt',
+      })
+      .populate({
+        path: 'followings.author',
+        select: '_id name avatar createdAt updatedAt',
+      });
   }
 }
