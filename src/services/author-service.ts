@@ -42,8 +42,8 @@ export class AuthorService {
 
     // push notifications
     NotificationService.create({
-      receiver: new mongoose.Types.ObjectId(targetAuthor),
-      sender: new mongoose.Types.ObjectId(authorId),
+      receiver: new mongoose.Types.ObjectId(findTargetAuthor.user!),
+      sender: new mongoose.Types.ObjectId(findAuthor.user!),
       message: 'Started following you.',
       targetUrl: authorId,
       type: 'follow',
