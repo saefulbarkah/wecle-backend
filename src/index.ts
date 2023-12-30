@@ -15,7 +15,13 @@ const httpServer = createServer(app);
 // initialize socket io
 // createSocketIo(httpServer);
 
-app.use(cors({ credentials: true, origin: process.env.ORIGIN_CORS }));
+app.use(
+  cors({
+    credentials: true,
+    origin: [`${process.env.ORIGIN_CORS}`],
+  })
+);
+
 app.use(cookieParser());
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
