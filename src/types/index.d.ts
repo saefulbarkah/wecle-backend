@@ -5,3 +5,14 @@ export type ApiResponse = {
   error?: any;
   data?: any;
 };
+
+export type tokenDecoded = {
+  id: string;
+  email: string;
+  name: string;
+  avatar: string;
+  token: string;
+  author_id: string;
+  exp: number;
+  iat: number;
+};

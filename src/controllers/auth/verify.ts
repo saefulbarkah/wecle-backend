@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import User from '../../models/user.js';
 import { ValidationError } from '../../errors/index.js';
 import jwt from 'jsonwebtoken';
-import { ApiResponse } from '../../types/index.js';
+import { ApiResponse, tokenDecoded } from '../../types/index.js';
 import { decodeJWT } from '../../lib/jwt.js';
 
 export default async function verifyUser(
@@ -20,7 +20,10 @@ export default async function verifyUser(
         data: null,
       } as ApiResponse);
 
-    const data = decodeJWT(token, process.env.SECRET_JWT as string);
+    const data = decodeJWT<tokenDecoded>(
+      token,
+      process.env.SECRET_JWT as string
+    );
 
     // get user
     const isUser = await User.findOne({ _id: data.id });

@@ -4,7 +4,7 @@ import User from '../../models/user.js';
 import { createToken, decodeJWT } from '../../lib/jwt.js';
 import { z } from 'zod';
 import { NotFoundError, ValidationError } from '../../errors/index.js';
-import { ApiResponse } from '../../types/index.js';
+import { ApiResponse, tokenDecoded } from '../../types/index.js';
 import { TAuthor } from '../../models/author.js';
 
 type Tuser = {
@@ -47,7 +47,10 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
       author_id: user.author._id,
     };
     const token = createToken(tokenStore);
-    const data = decodeJWT(token, process.env.SECRET_JWT as string);
+    const data = decodeJWT<tokenDecoded>(
+      token,
+      process.env.SECRET_JWT as string
+    );
     const response: ApiResponse = {
       status: 200,
       message: 'Welcome back, ' + user.author.name + '!',

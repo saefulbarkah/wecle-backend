@@ -1,10 +1,4 @@
 import jwt from 'jsonwebtoken';
-type responseData = {
-  id: string;
-  email: string;
-  avatar: string;
-  token?: string;
-};
 
 export const createToken = (data: any) => {
   return jwt.sign(data, process.env.SECRET_JWT as string, {
@@ -12,8 +6,12 @@ export const createToken = (data: any) => {
   });
 };
 
-export const decodeJWT = (token: string, secretKey: string) => {
+type DecodedData<T> = T;
+export const decodeJWT = <T extends { [key: string]: any }>(
+  token: string,
+  secretKey: string
+): DecodedData<T> => {
   const decode = jwt.verify(token, secretKey);
-  const data = decode as responseData;
+  const data = decode as T;
   return data;
 };
