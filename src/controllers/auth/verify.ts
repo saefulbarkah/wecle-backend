@@ -3,13 +3,7 @@ import User from '../../models/user.js';
 import { ValidationError } from '../../errors/index.js';
 import jwt from 'jsonwebtoken';
 import { ApiResponse } from '../../types/index.js';
-
-type responseData = {
-  id: string;
-  email: string;
-  avatar: string;
-  token?: string;
-};
+import { decodeJWT } from '../../lib/jwt.js';
 
 export default async function verifyUser(
   req: Request,
@@ -26,9 +20,7 @@ export default async function verifyUser(
         data: null,
       } as ApiResponse);
 
-    // decoding token
-    const decode = jwt.verify(token, process.env.SECRET_JWT as string);
-    const data = decode as responseData;
+    const data = decodeJWT(token, process.env.SECRET_JWT as string);
 
     // get user
     const isUser = await User.findOne({ _id: data.id });

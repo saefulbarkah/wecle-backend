@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import User from '../../models/user.js';
-import { createToken } from '../../lib/jwt.js';
+import { createToken, decodeJWT } from '../../lib/jwt.js';
 import { z } from 'zod';
 import { NotFoundError, ValidationError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
@@ -47,11 +47,12 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
       author_id: user.author._id,
     };
     const token = createToken(tokenStore);
+    const data = decodeJWT(token, process.env.SECRET_JWT as string);
     const response: ApiResponse = {
       status: 200,
       message: 'Welcome back, ' + user.author.name + '!',
       response: 'success',
-      data: { token },
+      data: { ...data, token },
     };
     res.cookie('auth', token, {
       secure: true,
