@@ -18,7 +18,7 @@ const createArticle = async (
 ) => {
   try {
     const { author, content, title, cover } = req.body as TReq;
-    articleSchema.parse({ author, content, title });
+    articleSchema.parse({ author, content, title, status: 'RELEASE' });
 
     // validation
     const isAuthor = await Author.findOne({ _id: author });

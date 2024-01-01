@@ -23,7 +23,7 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(express.json()); // for parsing application/json
+app.use(express.json({ limit: 5000000 })); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.get('/', (req, res) => {
