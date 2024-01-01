@@ -1,18 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import { articleSchema, articleType } from '../../schema/article-schema.js';
 import { strUUID } from '../../lib/convert-string.js';
-import Article from '../../models/article.js';
+import Article, { ArticleType } from '../../models/article.js';
 import { ApiResponse } from '../../types/index.js';
 import { Author } from '../../models/author.js';
 import { ErrorMessage, ValidationError } from '../../errors/index.js';
 
+type TReq = Pick<ArticleType, 'author' | 'cover' | 'content' | 'title'> & {
+  id: string;
+};
+
 const saveToDraft = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id, author, content, title } = req.body as articleType;
-    // const customSchema = articleSchema.pick({ author: true });
-    // await customSchema.parseAsync({
-    //   author,
-    // });
+    const { id, author, content, title, cover } = req.body as TReq;
 
     const slug = strUUID(title);
 
@@ -33,6 +32,7 @@ const saveToDraft = async (req: Request, res: Response, next: NextFunction) => {
         author,
         content,
         slug,
+        cover,
         status: 'DRAFT',
       });
       data = result;
@@ -43,6 +43,7 @@ const saveToDraft = async (req: Request, res: Response, next: NextFunction) => {
           $set: {
             title,
             content,
+            cover,
             status: 'DRAFT',
             updatedAt: Date.now(),
           },

@@ -17,6 +17,9 @@ const articleSchema = new Schema({
     type: String,
     enum: ['DRAFT', 'RELEASE'],
   },
+  cover: {
+    type: String,
+  },
   slug: {
     type: String,
     required: true,
@@ -32,7 +35,9 @@ const articleSchema = new Schema({
   },
 });
 
-export type ArticleType = InferSchemaType<typeof articleSchema>;
+export type ArticleType = InferSchemaType<typeof articleSchema> & {
+  _id: string;
+};
 
 const Article = mongoose.model<ArticleType>('Article', articleSchema);
 

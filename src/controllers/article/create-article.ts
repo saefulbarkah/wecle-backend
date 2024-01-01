@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
-import { articleSchema, articleType } from '../../schema/article-schema.js';
-import Article from '../../models/article.js';
+import { articleSchema } from '../../schema/article-schema.js';
+import Article, { ArticleType } from '../../models/article.js';
 import { nanoid } from 'nanoid';
 import { toCapitalizeString, toSlug } from '../../lib/convert-string.js';
 import { ValidationError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
 import { Author } from '../../models/author.js';
+
+type TReq = Pick<ArticleType, 'author' | 'cover' | 'content' | 'title'> & {
+  id: string;
+};
 
 const createArticle = async (
   req: Request,
@@ -13,7 +17,7 @@ const createArticle = async (
   next: NextFunction
 ) => {
   try {
-    const { author, content, title } = req.body as articleType;
+    const { author, content, title, cover } = req.body as TReq;
     articleSchema.parse({ author, content, title });
 
     // validation
@@ -28,7 +32,7 @@ const createArticle = async (
     const capTitle = toCapitalizeString(title);
     const slug = `${toSlug(capTitle)}-${randomizer}`;
 
-    await Article.create({ author, content, title, slug });
+    await Article.create({ author, content, title, slug, cover });
     const response: ApiResponse = {
       status: 201,
       message: 'Article created successfully',

@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { articleSchema } from '../../schema/article-schema.js';
-import Article from '../../models/article.js';
+import Article, { ArticleType } from '../../models/article.js';
 import { nanoid } from 'nanoid';
 import { toCapitalizeString, toSlug } from '../../lib/convert-string.js';
 import { ValidationError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
 import { Author } from '../../models/author.js';
+
+type TReq = Pick<
+  ArticleType,
+  'author' | 'cover' | 'content' | 'title' | 'status'
+> & {};
 
 const updateArticle = async (
   req: Request,
@@ -14,7 +19,7 @@ const updateArticle = async (
 ) => {
   try {
     const articleId = req.params.id;
-    const { content, title, author, status } = req.body;
+    const { content, title, author, status, cover } = req.body as TReq;
     const customSchema = articleSchema.pick({ author: true });
     await customSchema.parseAsync({ author });
 
@@ -40,7 +45,7 @@ const updateArticle = async (
 
     await Article.updateOne(
       { _id: articleId },
-      { content, title, slug, status, updatedAt: Date.now() }
+      { content, title, slug, status, cover, updatedAt: Date.now() }
     );
 
     const response: ApiResponse = {
