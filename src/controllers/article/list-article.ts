@@ -42,6 +42,7 @@ export default async function listArticle(
           content: 1,
           slug: 1,
           status: 1,
+          cover: 1,
           'author._id': 1,
           'author.name': 1,
           'author.avatar': 1,

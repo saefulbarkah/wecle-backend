@@ -12,6 +12,7 @@ type TReq = Pick<ArticleType, 'author' | 'cover' | 'content' | 'title'> & {
 const saveToDraft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id, author, content, title, cover } = req.body as TReq;
+    console.log(cover);
 
     const slug = strUUID(title);
 
