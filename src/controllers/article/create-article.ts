@@ -7,7 +7,10 @@ import { ValidationError } from '../../errors/index.js';
 import { ApiResponse } from '../../types/index.js';
 import { Author } from '../../models/author.js';
 
-type TReq = Pick<ArticleType, 'author' | 'cover' | 'content' | 'title'> & {
+type TReq = Pick<
+  ArticleType,
+  'author' | 'cover' | 'content' | 'title' | 'status'
+> & {
   id: string;
 };
 
@@ -17,8 +20,8 @@ const createArticle = async (
   next: NextFunction
 ) => {
   try {
-    const { author, content, title, cover } = req.body as TReq;
-    articleSchema.parse({ author, content, title, status: 'RELEASE' });
+    const { author, content, title, cover, status } = req.body as TReq;
+    articleSchema.parse({ author, content, title, status });
 
     // validation
     const isAuthor = await Author.findOne({ _id: author });
@@ -32,7 +35,7 @@ const createArticle = async (
     const capTitle = toCapitalizeString(title);
     const slug = `${toSlug(capTitle)}-${randomizer}`;
 
-    await Article.create({ author, content, title, slug, cover });
+    await Article.create({ author, content, title, slug, cover, status });
     const response: ApiResponse = {
       status: 201,
       message: 'Article created successfully',
