@@ -8,6 +8,11 @@ import cors from 'cors';
 import errorHandling from './lib/error-handling.js';
 import { createServer } from 'http';
 import { createSocketIo } from './sockets/socket.js';
+import Article from './models/article.js';
+import User from './models/user.js';
+import { comments } from './models/comments.js';
+import { Notification } from './models/notification.js';
+import { Author } from './models/author.js';
 
 const app = express();
 const port = 4000;
@@ -28,6 +33,17 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 app.get('/', (req, res) => {
   res.json('express + typescript');
+});
+
+// drop all database
+app.get('/drop', async (req, res) => {
+  if (NODE_ENV === 'production') return;
+  Article.deleteMany();
+  User.deleteMany();
+  comments.deleteMany();
+  Notification.deleteMany();
+  Author.deleteMany();
+  res.json('cleared');
 });
 
 // route lists

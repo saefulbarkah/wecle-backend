@@ -18,7 +18,8 @@ const articleSchema = new Schema({
     enum: ['DRAFT', 'RELEASE'],
   },
   cover: {
-    type: String,
+    src: String,
+    name: String,
   },
   slug: {
     type: String,

@@ -40,7 +40,7 @@ export interface notificationType
   _id: string;
 }
 
-const Notification = model<notificationType>(
+export const Notification = model<notificationType>(
   'Notification',
   notificationSchema
 );
