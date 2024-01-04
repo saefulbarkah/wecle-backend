@@ -23,6 +23,9 @@ export default async function listArticle(
     page = 1,
   } = query;
 
+  const itemsPerPage = limit * 1;
+  const skip = (page - 1) * limit;
+
   try {
     const data = await Article.aggregate([
       {
@@ -69,30 +72,18 @@ export default async function listArticle(
         },
       },
       {
-        $limit: limit * 1,
+        $skip: skip,
+      },
+      {
+        $limit: itemsPerPage * 1,
       },
     ]);
-
-    const count = await Article.aggregate([
-      {
-        $match: {
-          status: status,
-          ...(authorId && {
-            author: new mongoose.Types.ObjectId(authorId),
-          }),
-        },
-      },
-    ]).count('articleCount');
-
-    const articleCount = count[0].articleCount;
 
     const response: ApiResponse = {
       status: 200,
       message: 'Opration success',
       response: 'success',
       data: data,
-      currentPage: page,
-      totalPage: Math.ceil(articleCount / limit),
     };
     res.status(response.status).json(response);
   } catch (error) {
