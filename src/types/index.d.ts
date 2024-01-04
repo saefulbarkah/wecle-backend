@@ -4,6 +4,8 @@ export type ApiResponse = {
   message: string;
   error?: any;
   data?: any;
+  totalPage?: number;
+  currentPage?: number;
 };
 
 export type tokenDecoded = {

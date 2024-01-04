@@ -1,17 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
 import Article from '../../models/article.js';
 import { ApiResponse } from '../../types/index.js';
-import mongoose from 'mongoose';
+import mongoose, { Number } from 'mongoose';
+
+type RequestType = {
+  status: 'DRAFT' | 'RELEASE';
+  authorId: string;
+  limit: number;
+  page: number;
+};
 
 export default async function listArticle(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const { status = 'RELEASE', authorId = undefined } = req.query as {
-    status: 'DRAFT' | 'RELEASE';
-    authorId: string;
-  };
+  const query = req.query as unknown as RequestType;
+  const {
+    status = 'RELEASE',
+    authorId = undefined,
+    limit = 5,
+    page = 1,
+  } = query;
+
   try {
     const data = await Article.aggregate([
       {
@@ -57,22 +68,31 @@ export default async function listArticle(
           createdAt: -1,
         },
       },
+      {
+        $limit: limit * 1,
+      },
     ]);
-    // const data = await Article.find({
-    //   status: status,
-    //   author: authorId,
-    // }).populate({
-    //   path: 'author',
-    //   populate: {
-    //     path: 'user',
-    //     select: 'name avatar',
-    //   },
-    // });
+
+    const count = await Article.aggregate([
+      {
+        $match: {
+          status: status,
+          ...(authorId && {
+            author: new mongoose.Types.ObjectId(authorId),
+          }),
+        },
+      },
+    ]).count('articleCount');
+
+    const articleCount = count[0].articleCount;
+
     const response: ApiResponse = {
       status: 200,
       message: 'Opration success',
       response: 'success',
       data: data,
+      currentPage: page,
+      totalPage: Math.ceil(articleCount / limit),
     };
     res.status(response.status).json(response);
   } catch (error) {

@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import User from '../../models/user.js';
 import { ValidationError } from '../../errors/index.js';
-import jwt from 'jsonwebtoken';
 import { ApiResponse, tokenDecoded } from '../../types/index.js';
 import { decodeJWT } from '../../lib/jwt.js';
 

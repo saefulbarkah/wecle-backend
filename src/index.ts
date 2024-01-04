@@ -2,12 +2,10 @@ import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { DATABASE_URL, NODE_ENV } from './config/config.js';
 import * as route from './routes/index.js';
-import protectedRequest from './middleware/protect-api.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import errorHandling from './lib/error-handling.js';
 import { createServer } from 'http';
-import { createSocketIo } from './sockets/socket.js';
 import Article from './models/article.js';
 import User from './models/user.js';
 import { comments } from './models/comments.js';
@@ -38,11 +36,11 @@ app.get('/', (req, res) => {
 // drop all database
 app.get('/drop', async (req, res) => {
   if (NODE_ENV === 'production') return;
-  Article.deleteMany();
-  User.deleteMany();
-  comments.deleteMany();
-  Notification.deleteMany();
-  Author.deleteMany();
+  await Article.deleteMany();
+  await User.deleteMany();
+  await comments.deleteMany();
+  await Notification.deleteMany();
+  await Author.deleteMany();
   res.json('cleared');
 });
 

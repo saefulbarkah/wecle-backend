@@ -1,5 +1,4 @@
 import { Response, Request, NextFunction } from 'express';
-import { articleType } from '../../schema/article-schema.js';
 import Article from '../../models/article.js';
 import { ValidationError } from '../../errors/index.js';
 import { Author } from '../../models/author.js';
@@ -11,7 +10,10 @@ const draftLists = async (req: Request, res: Response, next: NextFunction) => {
     const author = await Author.findOne({ _id: author_id });
     if (!author) throw new ValidationError('Invalid Author');
 
-    const data = await Article.find({ author: author._id, status: 'DRAFT' });
+    const data = await Article.find({
+      author: author._id,
+      status: 'DRAFT',
+    }).select('_id title');
 
     const response: ApiResponse = {
       status: 200,
