@@ -1,11 +1,17 @@
-export type ApiResponse = {
+export type ApiResponse<TData = unknown> = {
   status: 200 | 201 | 204 | 400 | 401 | 404 | 500;
   response: 'success' | 'error';
   message: string;
   error?: any;
-  data?: any;
+  data?: TData;
   totalPage?: number;
   currentPage?: number;
+};
+
+export type TPagination<TData = any[]> = {
+  nextPage: number | null;
+  totalPages: number | null;
+  results: TData;
 };
 
 export type tokenDecoded = {
